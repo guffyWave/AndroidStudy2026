@@ -1,0 +1,15 @@
+# Ignore all build directories in all modules
+**/build/
+
+# Android/Gradle standard ignores
+.gradle/
+local.properties
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+
+# OS files
+.DS_Store
