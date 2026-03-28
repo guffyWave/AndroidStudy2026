@@ -27,7 +27,6 @@ class MainActivityLifeCycleObserver : DefaultLifecycleObserver {
 
     override fun onCreate(owner: LifecycleOwner) {
         super.onCreate(owner)
-
         
         Log.d(TAG, "onCreate: ")
     }
