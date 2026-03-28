@@ -6,7 +6,6 @@ package com.example.objectandcomposestudy.helpers
 //}
 
 class ApiClient private constructor(private val apiKey: String) {
-
     companion object {
         @Volatile
         private var instance: ApiClient? = null
