@@ -4,12 +4,27 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="BlogCategoryPreview">
+      <SelectionState runConfigName="AppPreview">
         <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="SimpleRecomposable">
+      <SelectionState runConfigName="MediaComposablePreview">
         <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="AutoCounterPreview">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="LoaderPreview">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="AppPreview (1)">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
       </SelectionState>
     </selectionStates>
   </component>
