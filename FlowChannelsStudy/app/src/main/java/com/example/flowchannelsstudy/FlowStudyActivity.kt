@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
@@ -60,9 +59,10 @@ class FlowStudyActivity : ComponentActivity() {
         //consuming list as flow
         GlobalScope.launch {
             getNotes()
-               // . onEach { delay(1000) }
-                Log.d(TAG, "getNotes as flow : ${it}")
-            }
+                //.onEach { delay(1000) }
+                .collect {
+                    Log.d(TAG, "getNotes as flow : ${it}")
+                }
         }
     }
 
