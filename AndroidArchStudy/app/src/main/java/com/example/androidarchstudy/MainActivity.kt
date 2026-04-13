@@ -37,7 +37,6 @@ class MainActivity : ComponentActivity() {
 
         setText()
 
-
         buttonView.setOnClickListener {
             mainViewModel.increment()
             setText()
