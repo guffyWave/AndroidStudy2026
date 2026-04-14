@@ -56,7 +56,7 @@ class FlowStudyActivity : ComponentActivity() {
 //            }
 //        }
 
-        //  flowEventConsumer()
+        // flowEventConsumer()
 
         //terminalOperatorsStudy()
 
@@ -87,7 +87,12 @@ class FlowStudyActivity : ComponentActivity() {
 
         //consumeFlowOnSeparateThreadWithOperators()
 
-        consumerWithExceptionHandling()
+        ///  consumerWithExceptionHandling()
+
+        SharedFlowProducer.startEmitting()
+
+        consumeMutableSharedFlow()
+        consumeMutableSharedFlowAnother()//second consumer
 
     }
 
@@ -204,6 +209,7 @@ class FlowStudyActivity : ComponentActivity() {
                     }
             }
         } catch (e: Exception) {
+            //exception in consumer
             Log.d(
                 TAG, "consuming exception <<----  ${e.message} "
             )
@@ -248,7 +254,7 @@ class FlowStudyActivity : ComponentActivity() {
                 Log.d(TAG, "flowProducer:obtainedFlowList --->>   ${it}")
             }
 
-            //signle -- throws error when there are more than one value
+            //single -- throws error when there are more than one value
             //reduce()
             //fold
             //count
@@ -277,6 +283,25 @@ class FlowStudyActivity : ComponentActivity() {
             "House roof shape is such to get rid of ice"
         )
         return notes.asFlow()
+    }
+
+    fun consumeMutableSharedFlow(): Unit {
+        lifecycleScope.launch {
+            Log.d(TAG, "consumeMutableSharedFlow: First consumer started ")
+            SharedFlowProducer.mutableSharedFlow.collect {
+                Log.d(TAG, "consumeMutableSharedFlow: consume <<<--- ${it}")
+            }
+        }
+    }
+
+    fun consumeMutableSharedFlowAnother(): Unit {
+        lifecycleScope.launch {
+            delay(6000)
+            Log.d(TAG, "consumeMutableSharedFlow: Second consumer started with delayed 6 seconds ")
+            SharedFlowProducer.mutableSharedFlow.collect {
+                Log.d(TAG, "consumeMutableSharedFlow: Second consumer <<<----- ${it}")
+            }
+        }
     }
 
 }
