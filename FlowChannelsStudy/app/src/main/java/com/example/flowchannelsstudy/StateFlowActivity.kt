@@ -17,7 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.flowchannelsstudy.viewmodels.CountrySearchViewModel
+import com.example.flowchannelsstudy.viewmodels.SensorViewModel
 import com.example.flowchannelsstudy.viewmodels.UserProfileViewModel
 
 
@@ -25,8 +27,9 @@ class StateFlowActivity : ComponentActivity() {
 
     private val counterViewModel: CounterViewModel by viewModels()
     private val userProfileViewModel: UserProfileViewModel by viewModels()
-
     private val countrySearchViewModel: CountrySearchViewModel by viewModels()
+
+    private val sensorViewModel: SensorViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +42,8 @@ class StateFlowActivity : ComponentActivity() {
                 ProfileScreen(userProfileViewModel)
 
                 CountrySearchInputText(countrySearchViewModel)
+
+                MagneticSensorView(sensorViewModel)
             }
         }
     }
@@ -101,4 +106,17 @@ fun CountrySearchInputText(countrySearchViewModel: CountrySearchViewModel): Unit
     TextField(value = queryTextInputState.value, onValueChange = {
         countrySearchViewModel.updateQuery(it)
     })
+}
+
+
+@Composable
+fun MagneticSensorView(sensorViewModel: SensorViewModel) {
+    var sensorEventState = sensorViewModel.sensorEvent.collectAsState()
+
+    Column(Modifier.padding(10.dp)) {
+        Text(text = "Magnetic Sensor X : ${sensorEventState.value.x}", fontSize = 20.sp)
+        Text(text = "Magnetic Sensor Y : ${sensorEventState.value.y}", fontSize = 20.sp)
+        Text(text = "Magnetic Sensor Z : ${sensorEventState.value.z}", fontSize = 20.sp)
+
+    }
 }
