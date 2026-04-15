@@ -10,16 +10,19 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.flowchannelsstudy.viewmodels.UserProfileViewModel
 
 
 class StateFlowActivity : ComponentActivity() {
 
     private val counterViewModel: CounterViewModel by viewModels()
+    private val userProfileViewModel: UserProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +30,10 @@ class StateFlowActivity : ComponentActivity() {
         //setContentView(R.layout.activity_state_flow)
 
         setContent {
-            CounterView(counterViewModel)
+            Column(Modifier.padding(50.dp)) {
+                CounterView(counterViewModel)
+                ProfileScreen(userProfileViewModel)
+            }
         }
     }
 }
@@ -40,8 +46,7 @@ fun CounterView(counterViewModel: CounterViewModel) {
 
     var countState = counterViewModel.counter.collectAsState()
 
-
-    Column(Modifier.padding(50.dp)) {
+    Column(Modifier.padding(10.dp)) {
         Text(text = "Counter Value ${countState.value}")
         Row(
             horizontalArrangement = Arrangement.SpaceBetween
@@ -60,4 +65,24 @@ fun CounterView(counterViewModel: CounterViewModel) {
             }
         }
     }
+}
+
+@Composable
+fun ProfileScreen(userProfileViewModel: UserProfileViewModel): Unit {
+    val userProfileUIState = userProfileViewModel.userProfileUIState.collectAsState()
+
+    Column(verticalArrangement = Arrangement.Center) {
+        if (userProfileUIState.value.isLoading) {
+            CircularProgressIndicator()
+        }
+        if (userProfileUIState.value.name != null) {
+            Text(text = "${userProfileUIState.value.name}")
+        }
+        Button(onClick = {
+            userProfileViewModel.loadProfile()
+        }) {
+            Text(text = "Load Profile")
+        }
+    }
+
 }
