@@ -2,17 +2,31 @@ package com.example.flowchannelsstudy
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.flowchannelsstudy.repos.NotificationEvent
+import com.example.flowchannelsstudy.repos.NotificationRepository
+import com.example.flowchannelsstudy.viewmodels.Location
+import com.example.flowchannelsstudy.viewmodels.LocationViewModel
+import com.example.flowchannelsstudy.viewmodels.LoginEvent
+import com.example.flowchannelsstudy.viewmodels.LoginViewModel
+import com.example.flowchannelsstudy.viewmodels.NotificationsViewModelFactory
+import com.example.flowchannelsstudy.viewmodels.ProductsPromoNotificationViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -33,13 +47,64 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class FlowStudyActivity : ComponentActivity() {
+
+    private val loginViewModel: LoginViewModel by viewModels()
+
+    private val locationViewModel: LocationViewModel by viewModels()
+
+    private lateinit var productsPromoNotificationViewModel: ProductsPromoNotificationViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_flow_study)
 
+        productsPromoNotificationViewModel =
+            ViewModelProvider(
+                this,
+                NotificationsViewModelFactory(
+                    NotificationRepository()
+                )
+            ).get(ProductsPromoNotificationViewModel::class.java)
+
         setContent {
-            SimpleButton()
+            Column() {
+                SimpleButton()
+                LoginButton(loginViewModel = loginViewModel)
+
+                UserLocationView(locationViewModel = locationViewModel)
+
+                ProductsBanner(productsPromoNotificationViewModel)
+            }
+        }
+
+        lifecycleScope.launch {
+            loginViewModel.events
+                .onStart {
+                    Log.d(TAG, "onCreate: loginViewModel on start -- ")
+                }
+                .onEach {
+                    Log.d(TAG, "onCreate: loginViewModel on each  -- ")
+                }
+                .collect { event ->
+                    Log.d(TAG, "onCreate: loginViewModel event collected ---  ")
+                    Log.d(TAG, "onCreate: loginViewModel event  --- ${event} ")
+                    when (event) {
+                        is LoginEvent.Success ->
+                            Toast.makeText(
+                                this@FlowStudyActivity,
+                                event.message,
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+                        is LoginEvent.Error ->
+                            Toast.makeText(
+                                this@FlowStudyActivity,
+                                "Login ${event.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                    }
+                }
         }
 
 
@@ -89,10 +154,9 @@ class FlowStudyActivity : ComponentActivity() {
 
         ///  consumerWithExceptionHandling()
 
-        SharedFlowProducer.startEmitting()
-
-        consumeMutableSharedFlow()
-        consumeMutableSharedFlowAnother()//second consumer
+//        SharedFlowProducer.startEmitting()
+//        consumeMutableSharedFlow()
+//        consumeMutableSharedFlowAnother()//second consumer
 
     }
 
@@ -322,4 +386,43 @@ fun SimpleButton(modifier: Modifier = Modifier) {
             Text(text = "Collect Data ")
         }
     }
+}
+
+@Composable
+fun LoginButton(modifier: Modifier = Modifier, loginViewModel: LoginViewModel) {
+    Button(onClick = {
+        CoroutineScope(Dispatchers.Main).launch {
+            Log.d(TAG, "LoginButton: on main thread launch ")
+            loginViewModel.onLoginClicked("gufran", "122")
+        }
+    }) {
+        Text(text = "Login")
+    }
+}
+
+@Composable
+fun UserLocationView(modifier: Modifier = Modifier, locationViewModel: LocationViewModel) {
+
+    var locationState = remember { mutableStateOf(Location(0.0, 0.0)) }
+
+    LaunchedEffect(Unit) {
+        locationViewModel.locationEvent.collect {
+            locationState.value = it
+        }
+    }
+
+    Text(text = "User Location : ${locationState.value.lat} ,  ${locationState.value.long} ")
+}
+
+@Composable
+fun ProductsBanner(promoNotificationViewModel: ProductsPromoNotificationViewModel) {
+    var productNotificationState = remember { mutableStateOf(NotificationEvent("")) }
+
+    LaunchedEffect(Unit) {
+        promoNotificationViewModel.notificationEvent.collect {
+            productNotificationState.value = it
+        }
+    }
+
+    Text(text = "Product Notification ${productNotificationState.value.message}")
 }
