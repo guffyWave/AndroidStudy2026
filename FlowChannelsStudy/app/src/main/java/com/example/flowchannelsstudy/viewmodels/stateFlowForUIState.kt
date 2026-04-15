@@ -7,13 +7,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-// loading api data for https://dummyjson.com/users/1
+//Your app loads user profile.
+//UI must show:
+//Loading indicator
+//Success data
+//Error message
 
 data class UserProfileUIState(
     val isLoading: Boolean = false,
     val name: String? = "",
     val error: String? = ""
 )
+
 
 class UserProfileViewModel : ViewModel() {
     private val _userProfileUIState = MutableStateFlow<UserProfileUIState>(UserProfileUIState())

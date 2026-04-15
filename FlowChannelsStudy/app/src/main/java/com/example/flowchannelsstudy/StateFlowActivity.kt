@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.flowchannelsstudy.viewmodels.CountrySearchViewModel
 import com.example.flowchannelsstudy.viewmodels.UserProfileViewModel
 
 
@@ -23,6 +25,8 @@ class StateFlowActivity : ComponentActivity() {
 
     private val counterViewModel: CounterViewModel by viewModels()
     private val userProfileViewModel: UserProfileViewModel by viewModels()
+
+    private val countrySearchViewModel: CountrySearchViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +37,8 @@ class StateFlowActivity : ComponentActivity() {
             Column(Modifier.padding(50.dp)) {
                 CounterView(counterViewModel)
                 ProfileScreen(userProfileViewModel)
+
+                CountrySearchInputText(countrySearchViewModel)
             }
         }
     }
@@ -85,4 +91,14 @@ fun ProfileScreen(userProfileViewModel: UserProfileViewModel): Unit {
         }
     }
 
+}
+
+@Composable
+fun CountrySearchInputText(countrySearchViewModel: CountrySearchViewModel): Unit {
+
+    val queryTextInputState = countrySearchViewModel.query.collectAsState()
+
+    TextField(value = queryTextInputState.value, onValueChange = {
+        countrySearchViewModel.updateQuery(it)
+    })
 }
