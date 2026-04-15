@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlowChannelsStudy">
         <activity
-            android:name=".FlowStudyActivity"
+            android:name=".StateFlowActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,12 +20,15 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".FlowStudyActivity"
+            android:exported="true">
+           
+        </activity>
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.FlowChannelsStudy">
-
-        </activity>
+            android:theme="@style/Theme.FlowChannelsStudy"></activity>
     </application>
 
 </manifest>
