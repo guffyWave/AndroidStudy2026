@@ -8,7 +8,9 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -16,8 +18,13 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import co.yml.charts.common.model.PlotType
+import co.yml.charts.ui.piechart.charts.PieChart
+import co.yml.charts.ui.piechart.models.PieChartConfig
+import co.yml.charts.ui.piechart.models.PieChartData
 import com.example.flowchannelsstudy.viewmodels.CountrySearchViewModel
 import com.example.flowchannelsstudy.viewmodels.SensorViewModel
 import com.example.flowchannelsstudy.viewmodels.UserProfileViewModel
@@ -113,10 +120,47 @@ fun CountrySearchInputText(countrySearchViewModel: CountrySearchViewModel): Unit
 fun MagneticSensorView(sensorViewModel: SensorViewModel) {
     var sensorEventState = sensorViewModel.sensorEvent.collectAsState()
 
+    val pieChartData = PieChartData(
+        plotType = PlotType.Donut,
+        slices = listOf(
+            PieChartData.Slice(
+                "X Dimension",
+                sensorEventState.value.x.toFloat(),
+                Color.Red
+            ),
+            PieChartData.Slice(
+                "Y Dinemsion",
+                sensorEventState.value.y.toFloat(),
+                Color.Green
+            ),
+            PieChartData.Slice(
+                "Z Dimension",
+                sensorEventState.value.x.toFloat(),
+                Color.Blue
+            ),
+        )
+    )
+    
+
+    val pieChartConfig = PieChartConfig(
+        isAnimationEnable = true,
+        showSliceLabels = false,
+        animationDuration = 1500
+    )
+
     Column(Modifier.padding(10.dp)) {
         Text(text = "Magnetic Sensor X : ${sensorEventState.value.x}", fontSize = 20.sp)
         Text(text = "Magnetic Sensor Y : ${sensorEventState.value.y}", fontSize = 20.sp)
         Text(text = "Magnetic Sensor Z : ${sensorEventState.value.z}", fontSize = 20.sp)
+
+
+        PieChart(
+            modifier = Modifier
+                .width(400.dp)
+                .height(400.dp),
+            pieChartData,
+            pieChartConfig
+        )
 
     }
 }

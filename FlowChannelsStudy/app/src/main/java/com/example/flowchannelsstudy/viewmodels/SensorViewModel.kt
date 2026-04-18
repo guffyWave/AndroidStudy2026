@@ -22,14 +22,15 @@ class SensorViewModel : ViewModel() {
     private fun onSensorStart() {
         viewModelScope.launch {
             while (true) {
-                delay(300)
                 //simulated sensor event
                 _sensorEvent.value =
                     MagneticSensorEvent(
-                        Random.nextDouble(),
-                        Random.nextDouble(),
-                        Random.nextDouble()
+                        Random.nextDouble() * 100,
+                        Random.nextDouble() * 100,
+                        Random.nextDouble() * 100
                     )
+
+                delay(5000)
             }
         }
     }
